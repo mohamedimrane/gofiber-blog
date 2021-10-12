@@ -3,6 +3,7 @@ package handlers
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/mohamedimrane/gofiber-blog/data"
@@ -59,12 +60,26 @@ func (p *PostsHandler) GetPost(c *fiber.Ctx) error {
 
 // AddPost adds a post populated by the data in the request body to the database
 func (p *PostsHandler) CreatePost(c *fiber.Ctx) error {
-	// TODO: Retrieve post data from request body
-	// TODO: Validate request body
-	// TODO: Create post with the given data in the database
-	// TODO: Return to the client the id of the post
+	// Retrieve post data from request body
+	var postData data.Post
+	err := c.BodyParser(&postData)
+	if err != nil {
+		return err
+	}
 
-	c.SendString("Creating post")
+	// TODO: Validate request body
+
+	// Create post with the given data in the database
+	var post data.Post = data.Post{
+		Title:     postData.Title,
+		Content:   postData.Content,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+	p.DB.Create(&post)
+
+	// Return to the client the id of the post
+	c.JSON(post.ID)
 
 	return nil
 }
