@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/mohamedimrane/gofiber-blog/data"
 	"gorm.io/gorm"
 )
 
@@ -22,10 +23,13 @@ func NewPostsHandler(db *gorm.DB) PostsHandler {
 
 // GetPosts returns to the client all the posts stored in the database
 func (p *PostsHandler) GetPosts(c *fiber.Ctx) error {
-	// TODO: Getting all the posts from database
-	// TODO: Returning the posts to the client as JSON
+	var posts []data.Post
 
-	c.SendString("Getting posts")
+	// Getting all the posts from database
+	p.DB.Order("created_at asc").Find(&posts)
+
+	// Returning the posts to the client as JSON
+	c.JSON(posts)
 
 	return nil
 }
