@@ -86,17 +86,31 @@ func (p *PostsHandler) CreatePost(c *fiber.Ctx) error {
 
 // AddPost updates a post in the database with the data in the request body and given id in its route
 func (p *PostsHandler) UpdatePost(c *fiber.Ctx) error {
-	// TODO: Retrive the id from route as an int
-	// TODO: Retrieve post data from request body
-	// TODO: Validate request body
-	// TODO: Update post with the given data in the database
-	// TODO: Return to the client the id of the post
-
+	// Retrive the id from route as an int
 	id, err := c.ParamsInt("id")
 	if err != nil {
 		return fiber.ErrNotFound
 	}
-	c.SendString("Updating post " + strconv.FormatInt(int64(id), 32))
+
+	// Retrieve post data from request body
+	var postData data.Post
+	err = c.BodyParser(&postData)
+	if err != nil {
+		return err
+	}
+
+	// TODO: Validate request body
+
+	// Update post with the given data in the database
+	var post data.Post
+	p.DB.First(&post, id)
+	post.Title = postData.Title
+	post.Content = postData.Content
+	post.UpdatedAt = time.Now()
+	p.DB.Save(&post)
+
+	// Return to the client the id of the post
+	c.JSON(post.ID)
 
 	return nil
 }
