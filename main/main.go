@@ -18,7 +18,7 @@ func main() {
 	})
 
 	// Creates database if it does not exist and opens a connection with it
-	_, err := gorm.Open(sqlite.Open("database.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("database.db"), &gorm.Config{})
 	if err != nil {
 		color.New(color.BgRed).Add(color.FgWhite).Add(color.Bold).Println(" Failed to connect to database ")
 		os.Exit(1)
@@ -27,7 +27,7 @@ func main() {
 	}
 
 	// Creates a handler struct for posts
-	var ph handlers.PostsHandler = handlers.NewPostsHandler()
+	var ph handlers.PostsHandler = handlers.NewPostsHandler(db)
 	// Creates a router group for posts
 	var posts fiber.Router = app.Group("/posts/")
 

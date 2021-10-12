@@ -5,15 +5,19 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 // PostsHandler is a struct managing posts related handlers dependencies ex: database
 type PostsHandler struct {
+	DB *gorm.DB
 }
 
 // NewPostsHandler is the constuctor of handlers.PostsHandler
-func NewPostsHandler() PostsHandler {
-	return PostsHandler{}
+func NewPostsHandler(db *gorm.DB) PostsHandler {
+	return PostsHandler{
+		DB: db,
+	}
 }
 
 // GetPosts returns to the client all the posts stored in the database
