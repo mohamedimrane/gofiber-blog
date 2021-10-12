@@ -36,15 +36,23 @@ func (p *PostsHandler) GetPosts(c *fiber.Ctx) error {
 
 // GetPost returns to the client a specific post based on its given id in the route
 func (p *PostsHandler) GetPost(c *fiber.Ctx) error {
-	// TODO: Retrive the id from route as an int
-	// TODO: Getting the post from database
-	// TODO: Returning the post to the client as JSON
-
+	// Retrive the id from route as an int
 	id, err := c.ParamsInt("id")
 	if err != nil {
 		return fiber.ErrNotFound
 	}
-	c.SendString("Getting post " + strconv.FormatInt(int64(id), 32))
+
+	// Getting the post from database
+	var post data.Post
+	err = p.DB.First(&post, id).Error
+
+	// Return 404 if the post is not found
+	if err != nil {
+		return fiber.ErrNotFound
+	}
+
+	// Returning the post to the client as JSON
+	c.JSON(post)
 
 	return nil
 }
