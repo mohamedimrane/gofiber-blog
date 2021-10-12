@@ -2,10 +2,11 @@
 package main
 
 import (
-	"blog/data"
-	"blog/handlers"
-	"blog/utils"
 	"os"
+
+	"github.com/mohamedimrane/gofiber-blog/data"
+	"github.com/mohamedimrane/gofiber-blog/handlers"
+	"github.com/mohamedimrane/gofiber-blog/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/driver/sqlite"

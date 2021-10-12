@@ -1,4 +1,4 @@
-module blog
+module github.com/mohamedimrane/gofiber-blog
 
 go 1.17
 
