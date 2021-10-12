@@ -40,7 +40,11 @@ func main() {
 	// Creates a handler struct for posts
 	var ph handlers.PostsHandler = handlers.NewPostsHandler(db)
 	// Creates a router group for posts
-	var posts fiber.Router = app.Group("/posts/")
+	var posts fiber.Router = app.Group("/posts/", func(c *fiber.Ctx) error {
+		c.Set("Content-Type", "application/json")
+
+		return c.Next()
+	})
 
 	// Registers routes for posts
 	posts.Get("/", ph.GetPosts)
