@@ -2,7 +2,6 @@
 package handlers
 
 import (
-	"strconv"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -117,14 +116,21 @@ func (p *PostsHandler) UpdatePost(c *fiber.Ctx) error {
 
 // AddPost detetes the post with the id given in its route
 func (p *PostsHandler) DeletePost(c *fiber.Ctx) error {
-	// TODO: Retrive the id from route as an int
-	// TODO: Delete the post with the given id
-
+	// Retrive the id from route as an int
 	id, err := c.ParamsInt("id")
 	if err != nil {
 		return fiber.ErrNotFound
 	}
-	c.SendString("Deleting post " + strconv.FormatInt(int64(id), 32))
+
+	// Delete the post with the given id
+	var post data.Post
+	err = p.DB.First(&post, id).Error
+	p.DB.Where("id = ?", id).Delete(&post)
+
+	// Return 404 if the post is not found
+	if err != nil {
+		return fiber.ErrNotFound
+	}
 
 	return nil
 }
