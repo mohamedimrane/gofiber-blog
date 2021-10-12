@@ -2,6 +2,7 @@
 package main
 
 import (
+	"blog/data"
 	"blog/handlers"
 	"os"
 
@@ -24,6 +25,15 @@ func main() {
 		os.Exit(1)
 	} else {
 		color.New(color.BgGreen).Add(color.FgWhite).Add(color.Bold).Println(" Connect to database successfuly ")
+	}
+
+	// Migartes the database with models
+	err = db.AutoMigrate(&data.Post{})
+	if err != nil {
+		color.New(color.BgRed).Add(color.FgWhite).Add(color.Bold).Println(" Failed to migrate database ")
+		os.Exit(1)
+	} else {
+		color.New(color.BgGreen).Add(color.FgWhite).Add(color.Bold).Println(" Migrated database successfuly ")
 	}
 
 	// Creates a handler struct for posts
