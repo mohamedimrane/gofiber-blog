@@ -27,7 +27,7 @@ func (p *PostsHandler) GetPosts(c *fiber.Ctx) error {
 	var posts []data.Post
 
 	// Getting all the posts from database
-	p.DB.Order("created_at asc").Find(&posts)
+	p.DB.Order("created_at desc").Find(&posts)
 
 	// Returning the posts to the client as JSON
 	c.JSON(posts)
