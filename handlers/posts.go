@@ -66,7 +66,11 @@ func (p *PostsHandler) CreatePost(c *fiber.Ctx) error {
 		return err
 	}
 
-	// TODO: Validate request body
+	// Validate request body
+	err = postData.Validate()
+	if err != nil {
+		return fiber.NewError(406, err.Error()) // 406 means not acceptable
+	}
 
 	// Create post with the given data in the database
 	var post data.Post = data.Post{
