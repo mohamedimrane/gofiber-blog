@@ -9,3 +9,7 @@ func PrintRed(text string) {
 func PrintGreen(text string) {
 	color.New(color.BgGreen).Add(color.FgWhite).Add(color.Bold).Println(text)
 }
+
+func PrintYellow(text string) {
+	color.New(color.BgYellow).Add(color.FgBlack).Add(color.Bold).Println(text)
+}
