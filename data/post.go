@@ -11,7 +11,7 @@ type Post struct {
 	ID        uint           `gorm:"primarykey" json:"id"`
 	Title     string         `json:"title" validate:"required,gte=3,lte=300"`
 	Content   string         `json:"content" validate:"required,gte=255,lte=10000"`
-	Tags      []*Tag         `gorm:"many2many:posts_tags;"`
+	Tags      []*Tag         `json:"-" gorm:"many2many:posts_tags;"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
