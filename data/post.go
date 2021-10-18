@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Post is the posts model
 type Post struct {
 	ID        uint           `gorm:"primarykey" json:"id"`
 	Title     string         `json:"title" validate:"required,gte=3,lte=300"`
@@ -17,6 +18,7 @@ type Post struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
+// Validate validates the post
 func (p *Post) Validate() error {
 	err := validator.New().Struct(p)
 	return err

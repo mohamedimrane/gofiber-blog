@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// Tag is the tags model
 type Tag struct {
 	ID        uint           `gorm:"primarykey" json:"id"`
 	Name      string         `json:"name"`
@@ -16,6 +17,7 @@ type Tag struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
+// Validate the tag
 func (t *Tag) Validate() error {
 	err := validator.New().Struct(t)
 	return err

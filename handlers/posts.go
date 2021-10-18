@@ -15,6 +15,7 @@ type PostsHandler struct {
 	DB *gorm.DB
 }
 
+// postBodyData is a wrapper around http request bodies for posts
 type postBodyData struct {
 	Title   string   `json:"title" validate:"required,gte=3,lte=300"`
 	Content string   `json:"content" validate:"required,gte=255,lte=10000"`
