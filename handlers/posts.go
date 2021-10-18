@@ -2,6 +2,7 @@
 package handlers
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -105,7 +106,7 @@ func (p *PostsHandler) UpdatePost(c *fiber.Ctx) error {
 	// Validate request body
 	err = postData.Validate()
 	if err != nil {
-		return fiber.NewError(406, err.Error()) // 406 means not acceptable
+		return fiber.NewError(http.StatusNotAcceptable, err.Error())
 	}
 
 	// Update post with the given data in the database
