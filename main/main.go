@@ -3,6 +3,7 @@ package main
 
 import (
 	"os"
+	"os/signal"
 
 	"github.com/mohamedimrane/gofiber-blog/data"
 	"github.com/mohamedimrane/gofiber-blog/handlers"
@@ -54,5 +55,16 @@ func main() {
 	posts.Delete("/:id", ph.DeletePost)
 
 	// Launches the server
-	app.Listen(":8080")
+	go func(app *fiber.App) {
+		app.Listen(":8080")
+	}(app)
+
+	// Gracefully shutdown when ordered to
+	sigChannel := make(chan os.Signal, 1)
+	signal.Notify(sigChannel, os.Interrupt)
+
+	sig := <-sigChannel
+
+	utils.PrintYellow("\n Gracefuly shutting down (" + sig.String() + ") ")
+	app.Shutdown()
 }
