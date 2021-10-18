@@ -23,8 +23,8 @@ type postBodyData struct {
 }
 
 // NewPostsHandler is the constuctor of handlers.PostsHandler
-func NewPostsHandler(db *gorm.DB) PostsHandler {
-	return PostsHandler{
+func NewPostsHandler(db *gorm.DB) *PostsHandler {
+	return &PostsHandler{
 		DB: db,
 	}
 }

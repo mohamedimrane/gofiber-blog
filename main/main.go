@@ -38,14 +38,22 @@ func main() {
 		utils.PrintGreen(" Migrated database successfuly ")
 	}
 
-	// Creates a handler struct for posts
-	var ph handlers.PostsHandler = handlers.NewPostsHandler(db)
-	// Creates a router group for posts
-	var posts fiber.Router = app.Group("/posts/", func(c *fiber.Ctx) error {
+	// Registers a middleware that changes Content-Type header to application/json
+	app.Use(func(c *fiber.Ctx) error {
 		c.Set("Content-Type", "application/json")
 
 		return c.Next()
 	})
+
+	// Creates a handler struct for posts
+	var ph *handlers.PostsHandler = handlers.NewPostsHandler(db)
+	// Creates a handler struct for tags
+	var th *handlers.TagsHandler = handlers.NewTagsHandler(db)
+
+	// Creates a router group for posts
+	var posts fiber.Router = app.Group("/posts/")
+	// Creates a router group for posts
+	var tags fiber.Router = app.Group("/tags/")
 
 	// Registers routes for posts
 	posts.Get("/", ph.GetPosts)
@@ -53,6 +61,9 @@ func main() {
 	posts.Post("/", ph.CreatePost)
 	posts.Patch("/:id", ph.UpdatePost)
 	posts.Delete("/:id", ph.DeletePost)
+
+	// Registers routes for tags
+	tags.Get("/", th.GetTags)
 
 	// Launches the server
 	go func(app *fiber.App) {
