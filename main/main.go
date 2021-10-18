@@ -29,7 +29,7 @@ func main() {
 	}
 
 	// Migartes the database with models
-	err = db.AutoMigrate(&data.Post{})
+	err = db.AutoMigrate(&data.Post{}, &data.Tag{})
 	if err != nil {
 		utils.PrintRed(" Failed to migrate database ")
 		os.Exit(1)
