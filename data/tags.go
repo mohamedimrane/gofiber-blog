@@ -10,7 +10,7 @@ import (
 // Tag is the tags model
 type Tag struct {
 	ID        uint           `gorm:"primarykey" json:"id"`
-	Name      string         `json:"name"`
+	Name      string         `json:"name" validate:"required,gte=3,lte=300"`
 	Posts     []*Post        `json:"-" gorm:"many2many:posts_tags;"`
 	CreatedAt time.Time      `json:"-"`
 	UpdatedAt time.Time      `json:"-"`
