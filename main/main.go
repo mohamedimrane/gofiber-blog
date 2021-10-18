@@ -3,7 +3,6 @@ package main
 
 import (
 	"os"
-	"os/signal"
 
 	"github.com/mohamedimrane/gofiber-blog/data"
 	"github.com/mohamedimrane/gofiber-blog/handlers"
@@ -66,16 +65,15 @@ func main() {
 	tags.Get("/", th.GetTags)
 
 	// Launches the server
-	go func(app *fiber.App) {
-		app.Listen(":8080")
-	}(app)
+	app.Listen(":8080")
 
 	// Gracefully shutdown when ordered to
-	sigChannel := make(chan os.Signal, 1)
-	signal.Notify(sigChannel, os.Interrupt)
+	// sigChannel := make(chan os.Signal, 1)
+	// signal.Notify(sigChannel, os.Interrupt)
+	// signal.Notify(sigChannel, os.Kill)
 
-	sig := <-sigChannel
+	// _ = <-sigChannel
 
-	utils.PrintYellow("\n Gracefuly shutting down (" + sig.String() + ") ")
-	app.Shutdown()
+	// utils.PrintYellow("\n Gracefuly shutting down (" + sig.String() + ") ")
+	// app.Shutdown()
 }
