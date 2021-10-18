@@ -15,6 +15,12 @@ type PostsHandler struct {
 	DB *gorm.DB
 }
 
+type postBodyData struct {
+	Title   string   `json:"title" validate:"required,gte=3,lte=300"`
+	Content string   `json:"content" validate:"required,gte=255,lte=10000"`
+	Tags    []string `json:"tags"`
+}
+
 // NewPostsHandler is the constuctor of handlers.PostsHandler
 func NewPostsHandler(db *gorm.DB) PostsHandler {
 	return PostsHandler{
@@ -61,26 +67,48 @@ func (p *PostsHandler) GetPost(c *fiber.Ctx) error {
 // AddPost adds a post populated by the data in the request body to the database
 func (p *PostsHandler) CreatePost(c *fiber.Ctx) error {
 	// Retrieve post data from request body
-	var postData data.Post
+	var postData postBodyData
 	err := c.BodyParser(&postData)
 	if err != nil {
 		return err
 	}
 
-	// Validate request body
-	err = postData.Validate()
-	if err != nil {
-		return fiber.NewError(406, err.Error()) // 406 means not acceptable
-	}
-
-	// Create post with the given data in the database
+	// Create struct post with the given data in the database
 	var post data.Post = data.Post{
 		Title:     postData.Title,
 		Content:   postData.Content,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
+
+	// Validate post
+	err = post.Validate()
+	if err != nil {
+		return fiber.NewError(406, err.Error()) // 406 means not acceptable
+	}
+
+	// Create post
 	p.DB.Create(&post)
+
+	// Associate given tags with post
+	for _, tagName := range postData.Tags {
+		var tag data.Tag
+
+		// Checks if tag already exists in database and retrieves it if yes
+		err := p.DB.Where("name = ?", tagName).First(&tag).Error
+
+		// If not, it creates it
+		if err != nil {
+			tag = data.Tag{
+				Name: tagName,
+			}
+
+			p.DB.Create(&tag)
+		}
+
+		// Then associates the tag to the post
+		p.DB.Model(&post).Association("Tags").Append([]*data.Tag{&tag})
+	}
 
 	// Return to the client the id of the post
 	c.JSON(post.ID)
